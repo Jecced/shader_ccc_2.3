@@ -12,7 +12,6 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
-        u_time: { value: 0.0 }
         u_resolution: { 
           value: [100.0, 100.0],
           editor: {
@@ -58,7 +57,6 @@ CCProgram vs %{
 
 CCProgram fs %{
   precision highp float;
-  
 
   in vec4 v_color;
 
@@ -70,14 +68,8 @@ CCProgram fs %{
   uniform Rsolution{
     vec2 u_resolution;
   };
-  uniform Timer{
-    float u_time;
-  };
 
   void main () {
-    float r = abs(sin(u_time));
-    gl_FragColor = vec4(r, 0., 0., 1.);
-
     vec2 st = gl_FragCoord.xy / u_resolution;
     gl_FragColor = vec4(st.x, st.y, 0., 1.);
 

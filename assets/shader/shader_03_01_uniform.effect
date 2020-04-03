@@ -12,6 +12,7 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
+        # 定义自定义属性u_time 用来接受属性的传递
         u_time: { value: 0.0 }
 }%
 
@@ -61,6 +62,7 @@ CCProgram fs %{
   uniform sampler2D texture;
   #endif
 
+  //引用u_time值到着色器中使用 
   uniform Timer{
     float u_time;
   };
