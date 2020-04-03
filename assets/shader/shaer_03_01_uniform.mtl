@@ -1,0 +1,17 @@
+{
+  "__type__": "cc.Material",
+  "_name": "shaer_03_uniform - 001",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "24d32064-4d4d-4f44-a6c7-5e8c362decf1"
+  },
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "defines": {
+        "USE_TEXTURE": true
+      }
+    }
+  }
+}
