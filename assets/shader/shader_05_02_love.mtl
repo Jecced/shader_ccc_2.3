@@ -1,0 +1,17 @@
+{
+  "__type__": "cc.Material",
+  "_name": "shader_05_01 - 001",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "d76e3a93-0689-4849-8798-95541801eab3"
+  },
+  "_techniqueIndex": 0,
+  "_techniqueData": {
+    "0": {
+      "defines": {
+        "USE_TEXTURE": true
+      }
+    }
+  }
+}

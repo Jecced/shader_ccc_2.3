@@ -1,0 +1,107 @@
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: vs
+      frag: fs
+      blendState:
+        targets:
+        - blend: true
+      rasterizerState:
+        cullMode: none
+      properties:
+        texture: { value: white }
+        u_resolution: { 
+          value: [100.0, 100.0],
+          editor: {
+            tooltip: "纹理尺寸px（宽 x 高）"
+          }
+        }
+}%
+
+CCProgram vs %{
+  precision highp float;
+
+  #include <cc-global>
+  #include <cc-local>
+
+  in vec3 a_position;
+  in vec4 a_color;
+  out vec4 v_color;
+
+  #if USE_TEXTURE
+  in vec2 a_uv0;
+  out vec2 v_uv0;
+  #endif
+
+  void main () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if CC_USE_MODEL
+    pos = cc_matViewProj * cc_matWorld * pos;
+    #else
+    pos = cc_matViewProj * pos;
+    #endif
+
+    #if USE_TEXTURE
+    v_uv0 = a_uv0;
+    #endif
+
+    v_color = a_color;
+
+    gl_Position = pos;
+  }
+}%
+
+
+CCProgram fs %{
+  precision highp float;
+
+  in vec4 v_color;
+
+  #if USE_TEXTURE
+  in vec2 v_uv0;
+  uniform sampler2D texture;
+  #endif
+
+  uniform Rsolution{
+    vec2 u_resolution;
+  };
+
+  // Plot a line on Y using a value between 0.0-1.0
+  float plot(vec2 st, float pct){
+    return  smoothstep( pct-0.2, pct, st.y) -
+            smoothstep( pct, pct+0.2, st.y);
+  }
+
+  #include <cc-global>
+
+  void main () {
+    vec2 st = gl_FragCoord.xy/u_resolution;
+
+    // float y = st.x;
+    // float y = sqrt(abs(st.x)) + sqrt(pow(1.0,2.0)-pow(st.x, 2.0)) * sin(80.0 * st.x);// - sqrt(pow(2.0,2.0)-pow(st.x, 2.0));// * sin(20 * st.x)
+    // float y = pow(st.x, 1.0); 
+    // float y = smoothstep(0.2, 0.5, st.x)-smoothstep(0.5, 0.8, st.x);
+    float x = st.x / 1.0 - 1.0;
+    float time = cc_time.x * 20.0;
+    float diff = 120.0;
+    float time80 = mod(time , diff);
+    if(time80 > diff/2.0){
+      time = diff - time80;
+    }else{
+      time = time80;
+    }
+    float y = .5+sqrt(abs(x)) - 0.8*sqrt(1.0-pow(x,2.0)) * sin(time*x);
+
+    // vec3 color = vec3(y);
+    vec3 color = vec3(0.0,0.0,0.0);
+
+    // Plot a line
+    float pct = plot(st,y);
+    color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+
+	  gl_FragColor = vec4(color,1.0);
+  }
+}%
