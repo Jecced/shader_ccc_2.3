@@ -19,6 +19,6 @@ export default class ShaderTimerHelper extends cc.Component {
     protected update(dt:number):void{
         if(!this.material) return;
         this.time += dt;
-        this.material.effect.setProperty('u_time', this.time);
+        this.material.setProperty('u_time', this.time);
     }
 }
