@@ -1,6 +1,6 @@
 {
   "__type__": "cc.Material",
-  "_name": "shader_05_01 - 001",
+  "_name": "shader_05_02_love",
   "_objFlags": 0,
   "_native": "",
   "_effectAsset": {
@@ -11,6 +11,13 @@
     "0": {
       "defines": {
         "USE_TEXTURE": true
+      },
+      "props": {
+        "u_resolution": {
+          "__type__": "cc.Vec2",
+          "x": 100,
+          "y": 100
+        }
       }
     }
   }

@@ -78,13 +78,13 @@ CCProgram fs %{
   #include <cc-global>
 
   void main () {
-    vec2 st = gl_FragCoord.xy/u_resolution;
+    vec2 st = gl_FragCoord.xy/u_resolution/2.0;
 
     // float y = st.x;
     // float y = sqrt(abs(st.x)) + sqrt(pow(1.0,2.0)-pow(st.x, 2.0)) * sin(80.0 * st.x);// - sqrt(pow(2.0,2.0)-pow(st.x, 2.0));// * sin(20 * st.x)
     // float y = pow(st.x, 1.0); 
     // float y = smoothstep(0.2, 0.5, st.x)-smoothstep(0.5, 0.8, st.x);
-    float x = st.x / 1.0 - 1.0;
+    float x = st.x * .4 - 1.0;
     float time = cc_time.x * 20.0;
     float diff = 120.0;
     float time80 = mod(time , diff);
@@ -94,7 +94,8 @@ CCProgram fs %{
       time = time80;
     }
     float y = .5+sqrt(abs(x)) - 0.8*sqrt(1.0-pow(x,2.0)) * sin(time*x);
-
+    // y /= 2.0;
+    y*=2.5;
     // vec3 color = vec3(y);
     vec3 color = vec3(0.0,0.0,0.0);
 

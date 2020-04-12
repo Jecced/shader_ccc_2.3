@@ -1,5 +1,3 @@
-// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
-
 CCEffect %{
   techniques:
   - passes:
@@ -12,12 +10,6 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
-        u_resolution: { 
-          value: [100.0, 100.0],
-          editor: {
-            tooltip: "纹理尺寸px（宽 x 高）"
-          }
-        }
 }%
 
 CCProgram vs %{
@@ -45,7 +37,7 @@ CCProgram vs %{
     #endif
 
     #if USE_TEXTURE
-    v_uv0 = a_uv0;
+    v_uv0 = vec2(a_uv0.x, 1.0 - a_uv0.y);
     #endif
 
     v_color = a_color;
@@ -54,38 +46,38 @@ CCProgram vs %{
   }
 }%
 
-
 CCProgram fs %{
   precision highp float;
 
-  in vec4 v_color;
+  varying vec2 v_texCoord;
+
+  #include <cc-global>
+
+  #define iResolution cc_screenSize
 
   #if USE_TEXTURE
   in vec2 v_uv0;
   uniform sampler2D texture;
   #endif
 
-  uniform Rsolution{
-    vec2 u_resolution;
-  };
-
-  // Plot a line on Y using a value between 0.0-1.0
-  float plot(vec2 st, float pct){
-    return  smoothstep( pct-0.2, pct, st.y) -
-            smoothstep( pct, pct+0.2, st.y);
-  }
+  vec4 mainImage (in vec2 fragCoord) {
+    vec2 uv = fragCoord / cc_screenSize.xy;
+    vec3 col = 0.5 + 0.5 * cos(cc_time.x + v_uv0.xyx + vec3(0, 2, 4));
+    return vec4(col, 1.0);
+  } 
 
   void main () {
-    vec2 st = gl_FragCoord.xy/u_resolution;
 
-    float y = st.x;
+    vec4 color = mainImage(v_uv0 * cc_screenSize.xy);
+    gl_FragColor = color;
 
-    vec3 color = vec3(y);
-
-    // Plot a line
-    float pct = plot(st,y);
-    color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
-
-	  gl_FragColor = vec4(color,1.0);
+    // vec3 col;
+    // #if USE_TEXTURE
+    // col = 0.5 + 0.5 * 8.5 * cos(cc_time.x + v_uv0.xyx + vec3(0, 4, 8));
+    // #else
+    // col = 0.5 + 0.5 * cos(cc_time.x + vec3(0, 2, 4));
+    // #endif
+    // vec4 color = vec4(col, 1.0);
+    // gl_FragColor = color; 
   }
 }%
